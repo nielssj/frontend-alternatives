@@ -1,0 +1,8 @@
+node_modules
+browser-bundle.js
+npm-debug.log
+*~
+lib/*
+!lib/.gitkeep
+.idea/
+js/bundle*.js
