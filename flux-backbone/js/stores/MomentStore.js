@@ -31,16 +31,8 @@ var CommentCollection = Backbone.Collection.extend({
 
 // Moment collection
 var Moment = Backbone.Model.extend({
-    getComments: function() {
-        var comments = new CommentCollection();
-        var momentId = this.get("_id");
-        comments.fetch({
-            url: "http://127.0.0.1:5984/comments/_design/example/_view/by_parent",
-            data: {
-                key: "\"" + momentId + "\""
-            }
-        });
-        return comments;
+    initialize: function() {
+        this.comments = new CommentCollection();
     }
 });
 var MomentCollection = Backbone.Collection.extend({
@@ -70,21 +62,12 @@ var MomentStore = assign({}, EventEmitter.prototype, {
         return moments.toArray();
     },
 
-    /**
-     * Retrieves comments for a given parent
-     */
-    getCommentsFor: function(parent) {
-
-    },
-
     addChangeListener: function(callback) {
         moments.on("sync", callback);
-        //this.on(CHANGE_EVENT, callback);
     },
 
     removeChangeListener: function(callback) {
         moments.off("sync", callback);
-        //this.removeListener(CHANGE_EVENT, callback);
     }
 });
 
@@ -94,11 +77,25 @@ AppDispatcher.register(function(action) {
         case AppConstants.ACTION_FETCH_MOMENTS:
             moments.fetch({url: "http://127.0.0.1:5984/moments/_design/example/_view/author"});
             break;
+        case AppConstants.ACTION_FETCH_COMMENTS_FOR:
+            var moment = moments.get(action.momentId);
+            moment.comments.fetch({
+                url: "http://127.0.0.1:5984/comments/_design/example/_view/by_parent",
+                data: { key: "\"" + action.momentId + "\"" }
+            });
+            break;
         case AppConstants.ACTION_CREATE_MOMENT:
             moments.create(action.moment);
             break;
         case AppConstants.ACTION_CREATE_COMMENT:
-            comments.create(action.comment);
+            var moment = moments.get(action.comment.parentMoment);
+            moment.comments.create(action.comment);
+            break;
+        case AppConstants.ACTION_DELETE_COMMENT:
+            var headers = {
+                "If-Match": action.comment.get("rev")
+            };
+            action.comment.destroy({headers:headers});
             break;
         default:
             // no op

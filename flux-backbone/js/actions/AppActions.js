@@ -9,6 +9,13 @@ var AppActions = {
         });
     },
 
+    fetchCommentsFor: function(momentId) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.ACTION_FETCH_COMMENTS_FOR,
+            momentId: momentId
+        });
+    },
+
     createMoment: function(moment) {
         AppDispatcher.dispatch({
             actionType: AppConstants.ACTION_CREATE_MOMENT,
@@ -19,6 +26,13 @@ var AppActions = {
     createComment: function(comment) {
         AppDispatcher.dispatch({
             actionType: AppConstants.ACTION_CREATE_COMMENT,
+            comment: comment
+        });
+    },
+
+    deleteComment: function(comment) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.ACTION_DELETE_COMMENT,
             comment: comment
         });
     }

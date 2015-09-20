@@ -5,19 +5,27 @@ var AppActions = require("../actions/AppActions");
 var Moment = React.createClass({
 
     propTypes: {
-        data: React.PropTypes.object.isRequired
+        moment: React.PropTypes.object.isRequired
     },
 
     getInitialState() {
-        var commentsCollection = this.props.data.getComments();
-        commentsCollection.on("sync", this._onCommentsChange);
-        commentsCollection.on("destroy", this._onCommentsChange);
-
+        AppActions.fetchCommentsFor(this.props.moment.id);
         return {
             showCommentInput: false,
-            commentCollection: commentsCollection,
             comments: []
         };
+    },
+
+    componentDidMount: function() {
+        // Listen for changes in comments
+        this.props.moment.comments.on("sync", this._onCommentsChange);
+        this.props.moment.comments.on("destroy", this._onCommentsChange);
+    },
+
+    componentWillUnmount: function() {
+        // Stop listening for changes in comments
+        this.props.moment.comments.off("sync", this._onCommentsChange);
+        this.props.moment.comments.off("destroy", this._onCommentsChange);
     },
 
     render: function() {
@@ -47,14 +55,12 @@ var Moment = React.createClass({
         }
 
         // Prepare comments, if any.
-        var makePostCommentFunc = this._makePostCommentFunc;
         var commentElements = [];
         rootNodes.forEach(function(node) {
             commentElements.push(
                 <Comment key={node.comment.get("id")}
                          comment={node.comment}
-                         children={node.children}
-                         makePostFunction={makePostCommentFunc}/>
+                         children={node.children} />
             );
         });
 
@@ -72,9 +78,9 @@ var Moment = React.createClass({
         return (
             <div className="moment">
                 <hr />
-                <p>{this.props.data.get("authorName")}</p>
+                <p>{this.props.moment.get("authorName")}</p>
                 <p>
-                    <span>{this.props.data.get("text")} </span>
+                    <span>{this.props.moment.get("text")} </span>
                     <span onClick={this._onCommentClick} className="comment-action noselect">comment</span>
                 </p>
                 {commentInput}
@@ -95,33 +101,20 @@ var Moment = React.createClass({
     // List for changes to all comments
     _onCommentsChange: function() {
         this.setState({
-            comments: this.state.commentCollection.toArray()
+            comments: this.props.moment.comments.toArray()
         })
     },
     // Post new comment
     _onNewCommentPost: function() {
-        var postCommentFunc = this._makePostCommentFunc(null);
-        var text = this.refs.newCommentTextInput.getDOMNode().value;
-        postCommentFunc(text);
+        AppActions.createComment({
+            parentMoment: this.props.moment.id,
+            text: this.refs.newCommentTextInput.getDOMNode().value
+        });
 
         // Clear and hide input
         this.setState({
-            newCommentText: "",
             showCommentInput: false
         });
-    },
-
-    // Make comment post function, to be used by Moment or sub-comments
-    _makePostCommentFunc: function(parentId) {
-        var commentCollection = this.state.commentCollection;
-        var parentMoment = this.props.data.get("_id");
-        return function(text) {
-            commentCollection.create({
-                text: text,
-                parentMoment: parentMoment,
-                parent: parentId
-            });
-        }
     }
 
 });

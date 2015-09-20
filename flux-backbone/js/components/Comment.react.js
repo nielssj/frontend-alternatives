@@ -1,10 +1,10 @@
 var React = require('react');
+var AppActions = require("../actions/AppActions");
 
 var Comment = React.createClass({
 
     propTypes: {
         comment: React.PropTypes.object.isRequired,
-        makePostFunction: React.PropTypes.func.isRequired,
         children: React.PropTypes.array
     },
 
@@ -15,15 +15,12 @@ var Comment = React.createClass({
     },
 
     render: function() {
-        var makePostFunction = this.props.makePostFunction;
-
         var childCommentElements = [];
         this.props.children.forEach(function(child) {
             childCommentElements.push(
                 <Comment key={child.comment.get("id")}
                          comment={child.comment}
-                         children={child.children}
-                         makePostFunction={makePostFunction}/>
+                         children={child.children} />
             );
         });
 
@@ -60,23 +57,20 @@ var Comment = React.createClass({
     },
 
     _onDeleteClick: function() {
-        var headers = {
-            "If-Match": this.props.comment.get("rev")
-        };
-        this.props.comment.destroy({headers:headers});
+        AppActions.deleteComment(this.props.comment);
     },
 
     // Post a new comment
     _onPostClick: function() {
-        // Post comment with correct parentId
-        var id = this.props.comment.get("id");
-        var postFunction = this.props.makePostFunction(id);
-        var text = this.refs.newCommentTextInput.getDOMNode().value;
-        postFunction(text);
+        // Emit creation action
+        AppActions.createComment({
+            parent: this.props.comment.get("id"),
+            parentMoment: this.props.comment.get("parentMoment"),
+            text: this.refs.newCommentTextInput.getDOMNode().value
+        });
 
         // Clear and hide input
         this.setState({
-            newCommentText: "",
             showCommentInput: false
         });
     }

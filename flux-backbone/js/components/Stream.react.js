@@ -15,7 +15,7 @@ var Stream = React.createClass({
         var momentElements = [];
         this.props.moments.forEach(function(moment) {
             momentElements.push(
-                <Moment key={moment.cid} data={moment}></Moment>
+                <Moment key={moment.cid} moment={moment}></Moment>
             );
         });
 
