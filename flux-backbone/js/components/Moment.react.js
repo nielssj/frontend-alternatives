@@ -12,6 +12,7 @@ var Moment = React.createClass({
         AppActions.fetchCommentsFor(this.props.moment.id);
         return {
             showCommentInput: false,
+            editMode: false,
             comments: []
         };
     },
@@ -74,15 +75,36 @@ var Moment = React.createClass({
                 </p>);
         }
 
+        var momentBody;
+        if(!this.state.editMode) {
+            // Normal mode
+            momentBody = (
+                <p>
+                    <span>{this.props.moment.get("text")} </span>
+                    <span onClick={this._onEditClick} className="comment-action noselect">edit</span>
+                    <span> </span>
+                    <span onClick={this._onCommentClick} className="comment-action noselect">comment</span>
+                </p>
+            );
+        } else {
+            // Edit mode
+            momentBody = (
+                <p>
+                    <input type="text" ref="editMomentTextInput" defaultValue={this.props.moment.get("text")} />
+                    <span> </span>
+                    <span onClick={this._onCancelClick} className="comment-action noselect">cancel</span>
+                    <span> </span>
+                    <span onClick={this._onSaveClick} className="comment-action noselect">save</span>
+                </p>
+            );
+        }
+
         // Return moment with any resulting comments
         return (
             <div className="moment">
                 <hr />
                 <p>{this.props.moment.get("authorName")}</p>
-                <p>
-                    <span>{this.props.moment.get("text")} </span>
-                    <span onClick={this._onCommentClick} className="comment-action noselect">comment</span>
-                </p>
+                {momentBody}
                 {commentInput}
                 <ul className="moment-comments">
                     {commentElements}
@@ -95,6 +117,35 @@ var Moment = React.createClass({
     _onCommentClick: function(resp) {
         this.setState({
             showCommentInput: !this.state.showCommentInput
+        });
+    },
+
+    // Start edit (enable edit-mode)
+    _onEditClick: function() {
+        this.setState({
+            editMode: true,
+            showCommentInput: false // Hide comment input, if it's open, to reduce UI clutter
+        });
+    },
+
+    // Cancel edits (disable edit-mode)
+    _onCancelClick: function() {
+        this.setState({
+            editMode: false
+        });
+    },
+
+    // Save edits
+    _onSaveClick: function() {
+        AppActions.updateMoment(
+            this.props.moment.id,
+            {
+                text: this.refs.editMomentTextInput.getDOMNode().value
+            }
+        );
+
+        this.setState({
+            editMode: false
         });
     },
 

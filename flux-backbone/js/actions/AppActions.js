@@ -23,6 +23,14 @@ var AppActions = {
         });
     },
 
+    updateMoment: function(momentId, changes) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.ACTION_UPDATE_MOMENT,
+            momentId: momentId,
+            changes: changes
+        });
+    },
+
     createComment: function(comment) {
         AppDispatcher.dispatch({
             actionType: AppConstants.ACTION_CREATE_COMMENT,

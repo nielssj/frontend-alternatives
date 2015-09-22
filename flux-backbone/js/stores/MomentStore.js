@@ -74,9 +74,11 @@ var MomentStore = assign({}, EventEmitter.prototype, {
 // Register callback to handle all updates
 AppDispatcher.register(function(action) {
     switch(action.actionType) {
+        // Fetch moments
         case AppConstants.ACTION_FETCH_MOMENTS:
             moments.fetch({url: "http://127.0.0.1:5984/moments/_design/example/_view/author"});
             break;
+        // Fetch comments for
         case AppConstants.ACTION_FETCH_COMMENTS_FOR:
             var moment = moments.get(action.momentId);
             moment.comments.fetch({
@@ -84,13 +86,22 @@ AppDispatcher.register(function(action) {
                 data: { key: "\"" + action.momentId + "\"" }
             });
             break;
+        // Create moment
         case AppConstants.ACTION_CREATE_MOMENT:
             moments.create(action.moment);
             break;
+        // Update moment
+        case AppConstants.ACTION_UPDATE_MOMENT:
+            var moment = moments.get(action.momentId);
+            moment.set(action.changes);
+            moment.save({}, { headers:{ "If-Match":moment.get("rev") } });
+            break;
+        // Create comment
         case AppConstants.ACTION_CREATE_COMMENT:
             var moment = moments.get(action.comment.parentMoment);
             moment.comments.create(action.comment);
             break;
+        // Delete comment
         case AppConstants.ACTION_DELETE_COMMENT:
             var headers = {
                 "If-Match": action.comment.get("rev")
