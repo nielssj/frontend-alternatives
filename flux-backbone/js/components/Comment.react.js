@@ -1,6 +1,8 @@
 var React = require('react');
 var AppActions = require("../actions/AppActions");
 
+var ENTER_KEY_CODE = 13;
+
 var Comment = React.createClass({
 
     propTypes: {
@@ -28,8 +30,8 @@ var Comment = React.createClass({
         if(this.state.showCommentInput) {
             commentInput =
                 (<p>
-                    <input type="text" ref="newCommentTextInput" />
-                    <input type="button" value="Post" onClick={this._onPostClick} />
+                    <input type="text" ref="newCommentTextInput" onKeyDown={this._onPostKey} />
+                    <input type="button" value="Post" onClick={this._onPost} />
                 </p>);
         }
 
@@ -60,8 +62,14 @@ var Comment = React.createClass({
         AppActions.deleteComment(this.props.comment);
     },
 
+    _onPostKey: function(event) {
+        if (event.keyCode === ENTER_KEY_CODE) {
+            this._onPost();
+        }
+    },
+
     // Post a new comment
-    _onPostClick: function() {
+    _onPost: function() {
         // Emit creation action
         AppActions.createComment({
             parent: this.props.comment.get("id"),

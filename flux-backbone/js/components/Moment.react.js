@@ -2,6 +2,8 @@ var React = require('react');
 var Comment = require("./Comment.react");
 var AppActions = require("../actions/AppActions");
 
+var ENTER_KEY_CODE = 13;
+
 var Moment = React.createClass({
 
     propTypes: {
@@ -70,8 +72,8 @@ var Moment = React.createClass({
         if(this.state.showCommentInput) {
             commentInput =
                 (<p>
-                    <input type="text" ref="newCommentTextInput" />
-                    <input type="button" value="Post" onClick={this._onNewCommentPost} />
+                    <input type="text" ref="newCommentTextInput" onKeyDown={this._onPostKey} />
+                    <input type="button" value="Post" onClick={this._onPost} />
                 </p>);
         }
 
@@ -90,11 +92,11 @@ var Moment = React.createClass({
             // Edit mode
             momentBody = (
                 <p>
-                    <input type="text" ref="editMomentTextInput" defaultValue={this.props.moment.get("text")} />
+                    <input type="text" ref="editMomentTextInput" onKeyDown={this._onSaveKey} defaultValue={this.props.moment.get("text")} />
                     <span> </span>
                     <span onClick={this._onCancelClick} className="comment-action noselect">cancel</span>
                     <span> </span>
-                    <span onClick={this._onSaveClick} className="comment-action noselect">save</span>
+                    <span onClick={this._onSave} className="comment-action noselect">save</span>
                 </p>
             );
         }
@@ -135,8 +137,15 @@ var Moment = React.createClass({
         });
     },
 
+    // Save key (enter) pressed while focus in input field
+    _onSaveKey: function(event) {
+        if (event.keyCode === ENTER_KEY_CODE) {
+            this._onSave();
+        }
+    },
+
     // Save edits
-    _onSaveClick: function() {
+    _onSave: function() {
         AppActions.updateMoment(
             this.props.moment.id,
             {
@@ -155,8 +164,15 @@ var Moment = React.createClass({
             comments: this.props.moment.comments.toArray()
         })
     },
+
+    _onPostKey: function(event) {
+        if (event.keyCode === ENTER_KEY_CODE) {
+            this._onPost();
+        }
+    },
+
     // Post new comment
-    _onNewCommentPost: function() {
+    _onPost: function() {
         AppActions.createComment({
             parentMoment: this.props.moment.id,
             text: this.refs.newCommentTextInput.getDOMNode().value
