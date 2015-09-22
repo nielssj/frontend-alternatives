@@ -4,9 +4,14 @@ var AppConstants = require('../constants/AppConstants');
 var assign = require('object-assign');
 var Backbone = require("backbone");
 var _ = require('underscore');
+Backbone.Validation = require('backbone-validation');
 
 
 var endpointHost = "http://127.0.0.1:5984";
+
+// Enable model validation
+_.extend(Backbone.Model.prototype, Backbone.Validation.mixin);
+
 
 // Custom parse function (to support CouchDB)
 parseCouch = function(data, options) {
@@ -33,6 +38,12 @@ var CommentCollection = Backbone.Collection.extend({
 var Moment = Backbone.Model.extend({
     initialize: function() {
         this.comments = new CommentCollection();
+    },
+    validation: {
+        text: {
+            required: true,
+            minLength: 10
+        }
     }
 });
 var MomentCollection = Backbone.Collection.extend({
@@ -68,6 +79,10 @@ var MomentStore = assign({}, EventEmitter.prototype, {
 
     removeChangeListener: function(callback) {
         moments.off("sync", callback);
+    },
+
+    addCreationInvalidListener: function(callback) {
+        this.on(AppConstants.EVENT_CREATION_INVALID, callback);
     }
 });
 
@@ -88,7 +103,10 @@ AppDispatcher.register(function(action) {
             break;
         // Create moment
         case AppConstants.ACTION_CREATE_MOMENT:
-            moments.create(action.moment);
+            var moment = moments.create(action.moment);
+            if(moment.validationError) {
+                MomentStore.emit(AppConstants.EVENT_CREATION_INVALID, moment.validationError);
+            }
             break;
         // Update moment
         case AppConstants.ACTION_UPDATE_MOMENT:
