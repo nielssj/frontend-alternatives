@@ -103,7 +103,7 @@ AppDispatcher.register(function(action) {
             break;
         // Create moment
         case AppConstants.ACTION_CREATE_MOMENT:
-            var moment = moments.create(action.moment);
+            var moment = moments.create(action.moment, {wait: true});
             if(moment.validationError) {
                 MomentStore.emit(AppConstants.EVENT_CREATION_INVALID, moment.validationError);
             }
