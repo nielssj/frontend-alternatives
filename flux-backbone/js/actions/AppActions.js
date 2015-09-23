@@ -31,6 +31,13 @@ var AppActions = {
         });
     },
 
+    deleteMoment: function(moment) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.ACTION_DELETE_MOMENT,
+            moment: moment
+        });
+    },
+
     createComment: function(comment) {
         AppDispatcher.dispatch({
             actionType: AppConstants.ACTION_CREATE_COMMENT,

@@ -96,6 +96,8 @@ var Moment = React.createClass({
                     <span> </span>
                     <span onClick={this._onCancelClick} className="comment-action noselect">cancel</span>
                     <span> </span>
+                    <span onClick={this._onDeleteClick} className="comment-action noselect">delete</span>
+                    <span> </span>
                     <span onClick={this._onSave} className="comment-action noselect">save</span>
                 </p>
             );
@@ -135,6 +137,10 @@ var Moment = React.createClass({
         this.setState({
             editMode: false
         });
+    },
+
+    _onDeleteClick: function() {
+        AppActions.deleteMoment(this.props.moment);
     },
 
     // Save key (enter) pressed while focus in input field

@@ -75,10 +75,12 @@ var MomentStore = assign({}, EventEmitter.prototype, {
 
     addChangeListener: function(callback) {
         moments.on("sync", callback);
+        moments.on("destroy", callback);
     },
 
     removeChangeListener: function(callback) {
         moments.off("sync", callback);
+        moments.off("destroy", callback);
     },
 
     addCreationInvalidListener: function(callback) {
@@ -107,6 +109,13 @@ AppDispatcher.register(function(action) {
             if(moment.validationError) {
                 MomentStore.emit(AppConstants.EVENT_CREATION_INVALID, moment.validationError);
             }
+            break;
+        // Delete moment
+        case AppConstants.ACTION_DELETE_MOMENT:
+            var headers = {
+                "If-Match": action.moment.get("rev")
+            };
+            action.moment.destroy({headers: headers});
             break;
         // Update moment
         case AppConstants.ACTION_UPDATE_MOMENT:
