@@ -125,6 +125,8 @@ AppDispatcher.register(function(action) {
             break;
         // Create comment
         case AppConstants.ACTION_CREATE_COMMENT:
+            action.comment.authorName = "Niels Søholm"; // TODO: Get user details from somewhere appropriate
+            action.comment.authorId = "9ab95fb7f725403aa17f8f0086faf4e8";
             var moment = moments.get(action.comment.parentMoment);
             moment.comments.create(action.comment);
             break;
