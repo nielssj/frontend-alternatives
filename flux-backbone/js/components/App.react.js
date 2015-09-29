@@ -28,6 +28,18 @@ var App = React.createClass({
     render: function() {
         return (
             <div>
+                <div className="header clearfix">
+                    <nav>
+                        <ul className="nav nav-pills pull-right">
+                            <li role="presentation" className="active"><a href="#">Stream</a></li>
+                            <li role="presentation"><a href="#">Friends</a></li>
+                            <li role="presentation"><a href="#">Profile</a></li>
+                        </ul>
+                    </nav>
+                    <h3 className="text-muted">
+                        <span className="glyphicon glyphicon-education" aria-hidden="true"></span>
+                        Alternatives</h3>
+                </div>
                 <Header />
                 <Stream moments={this.state.moments} />
             </div>
