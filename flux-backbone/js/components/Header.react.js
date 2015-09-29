@@ -29,12 +29,13 @@ var Header = React.createClass({
         }
 
         return (
-            <header id="header">
-                <p>
-                    <input type="text" ref="momentTextInput" />
-                    <input type="button" value="Post" onClick={this._onPost} />
-                    {validationErrorElement}
-                </p>
+            <header id="header" className="jumbotron">
+                <h1>Share a moment</h1>
+                <p className="lead">What just happened? You better share it!</p>
+                <textarea ref="momentTextInput" className="form-control" rows="3"></textarea>
+                <br />
+                <p><a onClick={this._onPost} className="btn btn-lg btn-primary" href="#" role="button">Share moment</a></p>
+                {validationErrorElement}
             </header>
         );
     },
