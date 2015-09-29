@@ -13,8 +13,8 @@ var Moment = React.createClass({
     getInitialState() {
         AppActions.fetchCommentsFor(this.props.moment.id);
         return {
-            showCommentInput: false,
             editMode: false,
+            showComments: false,
             comments: []
         };
     },
@@ -67,68 +67,100 @@ var Moment = React.createClass({
             );
         });
 
-        // Prepare comment input, if shown
-        var commentInput;
-        if(this.state.showCommentInput) {
-            commentInput =
-                (<p>
-                    <input type="text" ref="newCommentTextInput" onKeyDown={this._onPostKey} />
-                    <input type="button" value="Post" onClick={this._onPost} />
-                </p>);
-        }
-
+        // Moment body
         var momentBody;
         if(!this.state.editMode) {
             // Normal mode
             momentBody = (
-                <p>
-                    <span>{this.props.moment.get("text")} </span>
-                    <span onClick={this._onEditClick} className="comment-action noselect">edit</span>
-                    <span> </span>
-                    <span onClick={this._onCommentClick} className="comment-action noselect">comment</span>
-                </p>
+                <p><span>{this.props.moment.get("text")} </span></p>
             );
         } else {
             // Edit mode
             momentBody = (
-                <p>
-                    <input type="text" ref="editMomentTextInput" onKeyDown={this._onSaveKey} defaultValue={this.props.moment.get("text")} />
-                    <span> </span>
-                    <span onClick={this._onCancelClick} className="comment-action noselect">cancel</span>
-                    <span> </span>
-                    <span onClick={this._onDeleteClick} className="comment-action noselect">delete</span>
-                    <span> </span>
-                    <span onClick={this._onSave} className="comment-action noselect">save</span>
-                </p>
+                <p><textarea autoFocus ref="editMomentTextInput" onKeyDown={this._onSaveKey} defaultValue={this.props.moment.get("text")} className="form-control" rows="3" /></p>
             );
         }
 
-        // Return moment with any resulting comments
+        // Moment controls (lower-right)
+        var momentControls;
+        if(!this.state.editMode) {
+            // Normal mode
+            momentControls = (
+                <div className="btn-group pull-right moment-buttons" role="group" aria-label="...">
+                    <button onClick={this._onEditClick} type="button" className="btn btn-default">
+                        <span className="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                    </button>
+                </div>
+            );
+        } else {
+            // Edit mode
+            momentControls = (
+                <div className="btn-group pull-right moment-buttons" role="group" aria-label="...">
+                    <button onClick={this._onSave} type="button" className="btn btn-default">
+                        <span className="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                        <span> Save</span>
+                    </button>
+                    <button onClick={this._onDeleteClick} type="button" className="btn btn-default">
+                        <span className="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                        <span> Delete</span>
+                    </button>
+                    <button onClick={this._onCancelClick} type="button" className="btn btn-default active">
+                        <span className="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                    </button>
+                </div>
+            );
+        }
+
+        // Comment section
+        var seperator;
+        var commentSection;
+        if(this.state.showComments) {
+            seperator = (<hr className="moment-separator" />);
+            commentSection = (
+                <div>
+                    <ul className="comment-list-root">{commentElements}</ul>
+                    <div className="input-group new-comment-input-root">
+                        <input autoFocus type="text" ref="newCommentTextInput" onKeyDown={this._onPostKey} className="form-control" placeholder="Make a comment..." />
+                        <span onClick={this._onPost} className="input-group-btn">
+                            <button className="btn btn-default" type="button">Post!</button>
+                        </span>
+                    </div>
+                </div>
+            )
+        } else {
+            seperator = null;
+            commentSection = null;
+        }
+
         return (
-            <div className="moment">
-                <hr />
-                <p>{this.props.moment.get("authorName")}</p>
-                {momentBody}
-                {commentInput}
-                <ul className="moment-comments">
-                    {commentElements}
-                </ul>
+            <div className="panel panel-primary">
+                <div className="panel-heading">
+                    <strong>{this.props.moment.get("authorName")}</strong>
+                    <small> - 2 hours ago</small>
+                </div>
+                <div className="panel-body">
+                    {momentBody}
+                </div>
+                <div className="moment-footer clearfix">
+                    <div className="pull-left moment-buttons">
+                        <button onClick={this._toggleCommentsView} type="button" className="btn btn-default">
+                            <span className="glyphicon glyphicon-comment" aria-hidden="true"></span>
+                            <span> Comments ({this.state.comments.length})</span>
+                        </button>
+                    </div>
+                    {momentControls}
+                </div>
+                {seperator}
+                {commentSection}
             </div>
         );
-    },
-
-    // Show new comment input
-    _onCommentClick: function(resp) {
-        this.setState({
-            showCommentInput: !this.state.showCommentInput
-        });
     },
 
     // Start edit (enable edit-mode)
     _onEditClick: function() {
         this.setState({
             editMode: true,
-            showCommentInput: false // Hide comment input, if it's open, to reduce UI clutter
+            showComments: false // Hide comment view, if it's open, to reduce UI clutter
         });
     },
 
@@ -164,6 +196,12 @@ var Moment = React.createClass({
         });
     },
 
+    _toggleCommentsView: function() {
+        this.setState({
+            showComments: !this.state.showComments
+        });
+    },
+
     // List for changes to all comments
     _onCommentsChange: function() {
         this.setState({
@@ -182,11 +220,6 @@ var Moment = React.createClass({
         AppActions.createComment({
             parentMoment: this.props.moment.id,
             text: this.refs.newCommentTextInput.getDOMNode().value
-        });
-
-        // Clear and hide input
-        this.setState({
-            showCommentInput: false
         });
     }
 

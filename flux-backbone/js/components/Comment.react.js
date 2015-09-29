@@ -28,23 +28,34 @@ var Comment = React.createClass({
 
         var commentInput;
         if(this.state.showCommentInput) {
-            commentInput =
-                (<p>
-                    <input type="text" ref="newCommentTextInput" onKeyDown={this._onPostKey} />
-                    <input type="button" value="Post" onClick={this._onPost} />
-                </p>);
+            commentInput = (
+                <div className="input-group new-comment-input">
+                    <input autoFocus type="text" ref="newCommentTextInput" onKeyDown={this._onPostKey} className="form-control" placeholder="Make a comment..." />
+                    <span className="input-group-btn">
+                        <button className="btn btn-default" type="button">Post!</button>
+                    </span>
+                </div>);
         }
 
         return (
             <li className="comment">
                 <p>
-                    <span>{this.props.comment.get("text")} </span>
-                    <span onClick={this._onRespondClick} className="comment-action noselect">respond</span>
-                    <span> </span>
-                    <span onClick={this._onDeleteClick} className="comment-action noselect">delete</span>
+                    <strong className="text-primary">{this.props.comment.get("authorName")}: </strong>
+                    <span>{this.props.comment.get("text")}</span>
+                    <small className="text-muted"> - 6 minutes ago</small>
+                    <small> - </small>
+                    <small onClick={this._onRespondClick} className="text-primary noselect comment-action">
+                        <span className="glyphicon glyphicon-comment" aria-hidden="true"></span>
+                        <span> respond</span>
+                    </small>
+                    <small> - </small>
+                    <small onClick={this._onDeleteClick} className="text-primary noselect comment-action">
+                        <span className="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                        <span> delete</span>
+                    </small>
                 </p>
                 {commentInput}
-                <ul>
+                <ul className="comment-list-sub">
                     {childCommentElements}
                 </ul>
             </li>
