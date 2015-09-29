@@ -120,7 +120,7 @@ var Moment = React.createClass({
                 <div>
                     <ul className="comment-list-root">{commentElements}</ul>
                     <div className="input-group new-comment-input-root">
-                        <input autoFocus type="text" ref="newCommentTextInput" onKeyDown={this._onPostKey} className="form-control" placeholder="Make a comment..." />
+                        <input autoFocus type="text" ref="newCommentTextInput" value={this.state.newCommentText} onKeyDown={this._onPostKey} onChange={this._onNewCommentChange} className="form-control" placeholder="Make a comment..." />
                         <span onClick={this._onPost} className="input-group-btn">
                             <button className="btn btn-default" type="button">Post!</button>
                         </span>
@@ -209,6 +209,12 @@ var Moment = React.createClass({
         })
     },
 
+    _onNewCommentChange: function(event) {
+        this.setState({
+            newCommentText: event.target.value
+        });
+    },
+
     _onPostKey: function(event) {
         if (event.keyCode === ENTER_KEY_CODE) {
             this._onPost();
@@ -219,7 +225,11 @@ var Moment = React.createClass({
     _onPost: function() {
         AppActions.createComment({
             parentMoment: this.props.moment.id,
-            text: this.refs.newCommentTextInput.getDOMNode().value
+            text: this.state.newCommentText
+        });
+
+        this.setState({
+            newCommentText: ""
         });
     }
 
