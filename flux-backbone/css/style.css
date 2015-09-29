@@ -74,10 +74,7 @@ body {
 
 
 .comment-action {
-    font-size: smaller;
-    text-decoration: underline;
     cursor: pointer;
-    color: dodgerblue;
 }
 
 .noselect {
@@ -92,4 +89,44 @@ body {
 .validation-error {
     color: red;
     font-weight: bolder;
+}
+
+.moment-buttons {
+    margin: 14px;
+    height: 30px;
+}
+
+.moment-separator {
+    margin-top: 0;
+}
+
+.moment-footer {
+    height: 68px;
+}
+
+.comment-list-root {
+    list-style: none;
+    padding-left: 14px;
+    margin: 0;
+}
+
+.comment {
+    padding: 0 0 10px 4px
+}
+
+.comment-list-sub {
+    border-left: 1px solid #eee;
+    list-style: none;
+    padding: 0 0 4px 14px
+}
+
+.new-comment-input {
+    width: 75%;
+    margin-bottom: 14px;
+}
+
+
+.new-comment-input-root {
+    width: 100%;
+    padding: 0 14px 14px 14px;
 }
