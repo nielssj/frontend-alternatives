@@ -128,6 +128,11 @@ var Moment = React.createClass({
 
     // Show/hide comments view
     _toggleCommentsView: function() {
+        // Initiate fetch of comments
+        if(!this.state.showComments) {
+            AppActions.fetchCommentsFor(this.props.moment.id);
+        }
+        // Unfold comment section
         this.setState({
             showComments: !this.state.showComments
         });

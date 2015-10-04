@@ -106,10 +106,12 @@ AppDispatcher.register(function(action) {
         // Fetch comments for
         case AppConstants.ACTION_FETCH_COMMENTS_FOR:
             var moment = moments.get(action.momentId);
-            moment.comments.fetch({
-                url: "http://127.0.0.1:5984/comments/_design/example/_view/by_parent",
-                data: { key: "\"" + action.momentId + "\"" }
-            });
+            setTimeout(function() {
+                moment.comments.fetch({
+                    url: "http://127.0.0.1:5984/comments/_design/example/_view/by_parent",
+                    data: { key: "\"" + action.momentId + "\"" }
+                });
+            }, 1000); // NOTE: Added a fake timeout to demo loading animation
             break;
         // Create moment
         case AppConstants.ACTION_CREATE_MOMENT:

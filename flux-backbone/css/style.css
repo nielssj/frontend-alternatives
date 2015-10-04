@@ -97,7 +97,7 @@ body {
 }
 
 .moment-separator {
-    margin-top: 0;
+    margin: 0;
 }
 
 .moment-footer {
@@ -106,8 +106,8 @@ body {
 
 .comment-list-root {
     list-style: none;
-    padding-left: 14px;
-    margin: 0;
+    padding: 0;
+    margin: 14px 14px 0 14px;
 }
 
 .comment {
@@ -134,4 +134,11 @@ body {
 .comment-validation-error {
     margin: 0 14px 14px 14px;
     padding: 7px;
+}
+
+.loader {
+    background-image: url('../img/ajax-loader.gif');
+    width: 43px;
+    height: 11px;
+    margin: 14px auto;
 }

@@ -14,11 +14,10 @@ var CommentSection = React.createClass({
     },
 
     getInitialState() {
-        AppActions.fetchCommentsFor(this.props.parent);
         return {
             editMode: false,
             showComments: false,
-            comments: []
+            comments: null
         };
     },
 
@@ -35,47 +34,56 @@ var CommentSection = React.createClass({
     },
 
     render: function() {
-        // Prepare comment tree hierarchy
-        var commentTree = { };
-        var rootNodes = [];
-        this.state.comments.forEach(function(comment) {
-            var node = {
-                "comment": comment,
-                "children": []
-            };
+        // Comment list
+        var commentListElement = null;
+        if(this.state.comments) {
+            var commentTree = { };
+            var rootNodes = [];
 
-            // Add node to tree
-            commentTree[comment.id] = node;
+            // Prepare comment tree hierarchy
+            this.state.comments.forEach(function(comment) {
+                var node = {
+                    "comment": comment,
+                    "children": []
+                };
 
-            // If it has no comment parent, it most be a root comment (To be rendered by this moment)
-            if(!comment.has("parent")) {
-                rootNodes.push(node);
+                // Add node to tree
+                commentTree[comment.id] = node;
+
+                // If it has no comment parent, it most be a root comment (To be rendered by this moment)
+                if(!comment.has("parent")) {
+                    rootNodes.push(node);
+                }
+            });
+            for (var key in commentTree) {      // Note: The body of this loop could technically be a part of the forEach above, however this would assume that comments are always retrieved sorted in an order where parent comments come before all their children.
+                var node = commentTree[key];
+                var comment = node.comment;
+                if(comment.has("parent")) {
+                    commentTree[comment.get("parent")].children.push(node);
+                }
             }
-        });
-        for (var key in commentTree) {      // Note: The body of this loop could technically be a part of the forEach above, however this would assume that comments are always retrieved sorted in an order where parent comments come before all their children.
-            var node = commentTree[key];
-            var comment = node.comment;
-            if(comment.has("parent")) {
-                commentTree[comment.get("parent")].children.push(node);
-            }
+
+            // Prepare comment elements, if any.
+            var commentElements = [];
+            rootNodes.forEach(function(node) {
+                commentElements.push(
+                    <Comment key={node.comment.get("id")}
+                             comment={node.comment}
+                             children={node.children} />
+                );
+            });
+
+            commentListElement = <ul className="comment-list-root">{commentElements}</ul>;
+        } else {
+            commentListElement = <div className="loader" />;
         }
 
-        // Prepare comment elements, if any.
-        var commentElements = [];
-        rootNodes.forEach(function(node) {
-            commentElements.push(
-                <Comment key={node.comment.get("id")}
-                         comment={node.comment}
-                         children={node.children} />
-            );
-        });
-
-        // Comment section
+        // Rendering
         if(this.props.show) {
             return (
                 <div>
                     <hr className="moment-separator" />
-                    <ul className="comment-list-root">{commentElements}</ul>
+                    {commentListElement}
                     <ValidationError error={this.state.validationError} />
                     <div className="input-group new-comment-input-root">
                         <input autoFocus type="text" ref="newCommentTextInput" value={this.state.newCommentText} onKeyDown={this._onPostKey} onChange={this._onNewCommentChange} className="form-control" placeholder="Make a comment..." />
