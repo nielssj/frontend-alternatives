@@ -117,8 +117,8 @@ var CommentSection = React.createClass({
 
         AppActions.createComment(
             {
-                parentMoment: this.props.moment.id,
-                text: this.state.newCommentText,
+                parentMoment: this.props.parent,
+                text: this.state.newCommentText
             },
             this._onInvalidPost
         );
