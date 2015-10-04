@@ -5,6 +5,7 @@ var Router = Backbone.Router.extend({
     routes : {
         "stream": "stream",
         "friends": "friends",
+        "profile": "profile",
         ".*": "stream"
     },
     stream : function() {
@@ -12,6 +13,9 @@ var Router = Backbone.Router.extend({
     },
     friends : function() {
         this.current = { page: NavConstants.PAGE_FRIENDS };
+    },
+    profile : function() {
+        this.current = { page: NavConstants.PAGE_PROFILE };
     }
 });
 

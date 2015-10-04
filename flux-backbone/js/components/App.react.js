@@ -47,7 +47,10 @@ var App = React.createClass({
                     </div>);
                 break;
             case NavConstants.PAGE_FRIENDS:
-                currentPage = null; // TODO: Implement this
+                currentPage = <p>Here should be a list of friends</p>; // TODO: Implement this
+                break;
+            case NavConstants.PAGE_PROFILE:
+                currentPage = <p>Here should be the profile of the current user</p>; // TODO: Implement this
                 break;
         }
 
