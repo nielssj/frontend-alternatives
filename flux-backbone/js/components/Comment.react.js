@@ -17,6 +17,7 @@ var Comment = React.createClass({
     },
 
     render: function() {
+        // Prepare child comments
         var childCommentElements = [];
         this.props.children.forEach(function(child) {
             childCommentElements.push(
@@ -26,6 +27,7 @@ var Comment = React.createClass({
             );
         });
 
+        // New comment input field
         var commentInput;
         if(this.state.showCommentInput) {
             commentInput = (
@@ -34,9 +36,11 @@ var Comment = React.createClass({
                     <span className="input-group-btn">
                         <button className="btn btn-default" type="button">Post!</button>
                     </span>
-                </div>);
+                </div>
+            );
         }
 
+        // Render
         return (
             <li className="comment">
                 <p>
@@ -69,10 +73,12 @@ var Comment = React.createClass({
         });
     },
 
+    // Delete comment
     _onDeleteClick: function() {
         AppActions.deleteComment(this.props.comment);
     },
 
+    // Enter key pressed when new comment field in focus (trigger post)
     _onPostKey: function(event) {
         if (event.keyCode === ENTER_KEY_CODE) {
             this._onPost();

@@ -101,6 +101,7 @@ var Moment = React.createClass({
         });
     },
 
+    // Delete moment
     _onDeleteClick: function() {
         AppActions.deleteMoment(this.props.moment);
     },

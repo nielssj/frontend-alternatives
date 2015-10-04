@@ -46,6 +46,7 @@ var NavigationBar = React.createClass({
         );
     },
 
+    // Navigate to given destination page
     onNavigateClick: function(destination) {
         Router.navigate(destination, { trigger:true });
         this.setState({ active:destination });

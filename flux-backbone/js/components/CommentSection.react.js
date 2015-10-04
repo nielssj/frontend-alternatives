@@ -105,12 +105,14 @@ var CommentSection = React.createClass({
         })
     },
 
+    // Save changes from new comment field in state
     _onNewCommentChange: function(event) {
         this.setState({
             newCommentText: event.target.value
         });
     },
 
+    // Enter key pressed when new comment field in focus (trigger post)
     _onPostKey: function(event) {
         if (event.keyCode === ENTER_KEY_CODE) {
             this._onPost();
