@@ -7,11 +7,11 @@ var NavigationBar = React.createClass({
     getInitialState: function() {
         return {
             pages: [
-                { title: "Stream", path: "stream", handler: this.onStreamClick},
-                { title: "Friends", path: "friends", handler: this.onFriendsClick },
-                { title: "Profile", path: "profile", handler: this.onProfileClick }
+                { title: "Stream", path: "stream" },
+                { title: "Friends", path: "friends" },
+                { title: "Profile", path: "profile" }
             ],
-            active: "Stream"
+            active: "stream"
         };
     },
 
@@ -19,16 +19,17 @@ var NavigationBar = React.createClass({
 
         // Construct list of page links
         var pageLinks = [];
-        var active = this.state.active;
         this.state.pages.forEach(function(page) {
-            var className = (active == page.title) ? "active" : "";
+            var className = (this.state.active == page.path) ? "active" : "";
             var element = (
                 <li role="presentation" className={className}>
-                    <a onClick={page.handler} className="nav-link">{page.title}</a>
+                    <a onClick={this.onNavigateClick.bind(this, page.path)} className="nav-link">
+                        {page.title}
+                    </a>
                 </li>
             );
             pageLinks.push(element);
-        });
+        }.bind(this));
 
         // Render
         return (
@@ -38,26 +39,16 @@ var NavigationBar = React.createClass({
                         {pageLinks}
                     </ul>
                 </nav>
-                <h3 className="text-muted" onClick={this.onStreamClick}>
+                <h3 className="text-muted" onClick={this.onNavigateClick.bind(this, "stream")}>
                     <span className="glyphicon glyphicon-education" aria-hidden="true"></span>
                     Alternatives</h3>
             </div>
         );
     },
 
-    onStreamClick: function() {
-        Router.navigate("stream", { trigger:true });
-        this.setState( {active: "Stream"} );
-    },
-
-    onFriendsClick: function() {
-        Router.navigate("friends", { trigger:true });
-        this.setState( {active: "Friends"} );
-    },
-
-    onProfileClick: function() {
-        Router.navigate("profile", { trigger:true });
-        this.setState( {active: "Profile"} );
+    onNavigateClick: function(destination) {
+        Router.navigate(destination, { trigger:true });
+        this.setState({ active:destination });
     }
 });
 
