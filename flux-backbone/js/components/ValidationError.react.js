@@ -4,7 +4,7 @@ var ReactPropTypes = React.PropTypes;
 var ValidationError = React.createClass({
 
     propTypes: {
-        error: React.PropTypes.object.isRequired
+        error: React.PropTypes.object
     },
 
     render: function() {

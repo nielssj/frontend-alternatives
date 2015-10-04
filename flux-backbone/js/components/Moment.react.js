@@ -126,6 +126,7 @@ var Moment = React.createClass({
         });
     },
 
+    // Show/hide comments view
     _toggleCommentsView: function() {
         this.setState({
             showComments: !this.state.showComments
