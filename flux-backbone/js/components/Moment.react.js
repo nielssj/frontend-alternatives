@@ -1,5 +1,6 @@
 var React = require('react');
 var Comment = require("./Comment.react");
+var ValidationError = require("./ValidationError.react");
 var AppActions = require("../actions/AppActions");
 
 var ENTER_KEY_CODE = 13;
@@ -118,22 +119,11 @@ var Moment = React.createClass({
             // Horizontal separator to rest of moment
             seperator = (<hr className="moment-separator" />);
 
-            // New comment validation error
-            var validationErrorElement;
-            if(this.state.validationError) {
-                validationErrorElement = (
-                    <div className="alert alert-danger comment-validation-error" for="newCommentTextInput">
-                        <strong>Whoops!</strong>
-                        <span> {this.state.validationError.text}</span>
-                    </div>
-                );
-            }
-
-            // Actual comment list and new comment input
+             // Actual comment list and new comment input
             commentSection = (
                 <div>
                     <ul className="comment-list-root">{commentElements}</ul>
-                    {validationErrorElement}
+                    <ValidationError error={this.state.validationError} />
                     <div className="input-group new-comment-input-root">
                         <input autoFocus type="text" ref="newCommentTextInput" value={this.state.newCommentText} onKeyDown={this._onPostKey} onChange={this._onNewCommentChange} className="form-control" placeholder="Make a comment..." />
                         <span onClick={this._onPost} className="input-group-btn">
