@@ -3,6 +3,9 @@ var React = require('react');
 var MomentStore = require("../stores/MomentStore");
 var AppActions = require("../actions/AppActions");
 var Stream = require("./Stream.react");
+var Router = require("../Router");
+var NavConstants = require("../constants/NavigationConstants");
+var NavigationBar = require("./NavigationBar.react");
 
 function getTodoState() {
     return {
@@ -16,6 +19,13 @@ var App = React.createClass({
         return getTodoState();
     },
 
+    componentWillMount: function() {
+        this.callback = (function() {
+            this.forceUpdate();
+        }).bind(this);
+        Router.on("route", this.callback);
+    },
+
     componentDidMount: function() {
         MomentStore.addChangeListener(this._onChange);
         AppActions.fetchMoments();
@@ -23,25 +33,28 @@ var App = React.createClass({
 
     componentWillUnmount: function() {
         MomentStore.removeChangeListener(this._onChange);
+        Router.off("route", this.callback);
     },
 
     render: function() {
+        var currentPage = null;
+        switch(Router.current.page) {
+            case NavConstants.PAGE_STREAM:
+                currentPage = (
+                    <div>
+                        <Header />
+                        <Stream moments={this.state.moments} />
+                    </div>);
+                break;
+            case NavConstants.PAGE_FRIENDS:
+                currentPage = null; // TODO: Implement this
+                break;
+        }
+
         return (
             <div>
-                <div className="header clearfix">
-                    <nav>
-                        <ul className="nav nav-pills pull-right">
-                            <li role="presentation" className="active"><a href="#">Stream</a></li>
-                            <li role="presentation"><a href="#">Friends</a></li>
-                            <li role="presentation"><a href="#">Profile</a></li>
-                        </ul>
-                    </nav>
-                    <h3 className="text-muted">
-                        <span className="glyphicon glyphicon-education" aria-hidden="true"></span>
-                        Alternatives</h3>
-                </div>
-                <Header />
-                <Stream moments={this.state.moments} />
+                <NavigationBar />
+                {currentPage}
             </div>
         );
     },

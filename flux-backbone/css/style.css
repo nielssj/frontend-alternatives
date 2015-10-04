@@ -142,3 +142,7 @@ body {
     height: 11px;
     margin: 14px auto;
 }
+
+.nav-link {
+    cursor: pointer;
+}
