@@ -27,7 +27,15 @@ parseCouch = function(data, options) {
 };
 
 // Comment collection
-var Comment = Backbone.Model.extend();
+var Comment = Backbone.Model.extend({
+    validation: {
+        text: {
+            required: true,
+            minLength: 1,
+            maxLength: 400
+        }
+    }
+});
 var CommentCollection = Backbone.Collection.extend({
     model: Comment,
     url: endpointHost + "/comments",
@@ -128,7 +136,10 @@ AppDispatcher.register(function(action) {
             action.comment.authorName = "Niels Søholm"; // TODO: Get user details from somewhere appropriate
             action.comment.authorId = "9ab95fb7f725403aa17f8f0086faf4e8";
             var moment = moments.get(action.comment.parentMoment);
-            moment.comments.create(action.comment);
+            var comment = moment.comments.create(action.comment);
+            if(comment.validationError) {
+                action.invalid(comment.validationError);
+            }
             break;
         // Delete comment
         case AppConstants.ACTION_DELETE_COMMENT:

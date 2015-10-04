@@ -38,10 +38,11 @@ var AppActions = {
         });
     },
 
-    createComment: function(comment) {
+    createComment: function(comment, invalidCallback) {
         AppDispatcher.dispatch({
             actionType: AppConstants.ACTION_CREATE_COMMENT,
-            comment: comment
+            comment: comment,
+            invalid: invalidCallback
         });
     },
 

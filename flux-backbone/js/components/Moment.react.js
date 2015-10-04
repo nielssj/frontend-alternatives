@@ -115,10 +115,25 @@ var Moment = React.createClass({
         var seperator;
         var commentSection;
         if(this.state.showComments) {
+            // Horizontal separator to rest of moment
             seperator = (<hr className="moment-separator" />);
+
+            // New comment validation error
+            var validationErrorElement;
+            if(this.state.validationError) {
+                validationErrorElement = (
+                    <div className="alert alert-danger comment-validation-error" for="newCommentTextInput">
+                        <strong>Whoops!</strong>
+                        <span> {this.state.validationError.text}</span>
+                    </div>
+                );
+            }
+
+            // Actual comment list and new comment input
             commentSection = (
                 <div>
                     <ul className="comment-list-root">{commentElements}</ul>
+                    {validationErrorElement}
                     <div className="input-group new-comment-input-root">
                         <input autoFocus type="text" ref="newCommentTextInput" value={this.state.newCommentText} onKeyDown={this._onPostKey} onChange={this._onNewCommentChange} className="form-control" placeholder="Make a comment..." />
                         <span onClick={this._onPost} className="input-group-btn">
@@ -223,13 +238,27 @@ var Moment = React.createClass({
 
     // Post new comment
     _onPost: function() {
-        AppActions.createComment({
-            parentMoment: this.props.moment.id,
-            text: this.state.newCommentText
+        this.setState({
+            validationError: null
         });
+
+        AppActions.createComment(
+            {
+                parentMoment: this.props.moment.id,
+                text: this.state.newCommentText,
+            },
+            this._onInvalidPost
+        );
 
         this.setState({
             newCommentText: ""
+        });
+    },
+
+    // Show validation error
+    _onInvalidPost: function(validationError) {
+        this.setState({
+            validationError: validationError
         });
     }
 
