@@ -146,3 +146,27 @@ body {
 .nav-link {
     cursor: pointer;
 }
+
+.chat-message:nth-child(even) {
+    background-color: #f4f4f4;
+}
+
+.chat-message-thumb {
+    margin: 10px;
+}
+
+.chat-message-thumb > div {
+    width: 64px;
+    height: 64px;
+    background-color: #f4f4f4;
+    text-align: center;
+}
+
+.chat-message-me .chat-message-thumb > div {
+    background-color: #337ab7;
+    color: white;
+}
+
+.chat-message-body {
+    padding: 7px 10px 10px 10px;
+}

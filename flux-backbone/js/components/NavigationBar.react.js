@@ -8,7 +8,7 @@ var NavigationBar = React.createClass({
         return {
             pages: [
                 { title: "Stream", path: "stream" },
-                { title: "Friends", path: "friends" },
+                { title: "Chat", path: "chat" },
                 { title: "Profile", path: "profile" }
             ],
             active: "stream"
@@ -22,7 +22,7 @@ var NavigationBar = React.createClass({
         this.state.pages.forEach(function(page) {
             var className = (this.state.active == page.path) ? "active" : "";
             var element = (
-                <li role="presentation" className={className}>
+                <li role="presentation" className={className} key={page.title}>
                     <a onClick={this.onNavigateClick.bind(this, page.path)} className="nav-link">
                         {page.title}
                     </a>

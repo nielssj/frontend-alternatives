@@ -6,6 +6,7 @@ var Stream = require("./Stream.react");
 var Router = require("../Router");
 var NavConstants = require("../constants/NavigationConstants");
 var NavigationBar = require("./NavigationBar.react");
+var Chat = require("./Chat.react");
 
 function getTodoState() {
     return {
@@ -46,8 +47,8 @@ var App = React.createClass({
                         <Stream moments={this.state.moments} />
                     </div>);
                 break;
-            case NavConstants.PAGE_FRIENDS:
-                currentPage = <p>Here should be a list of friends</p>; // TODO: Implement this
+            case NavConstants.PAGE_CHAT:
+                currentPage = <Chat />
                 break;
             case NavConstants.PAGE_PROFILE:
                 currentPage = <p>Here should be the profile of the current user</p>; // TODO: Implement this

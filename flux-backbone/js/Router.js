@@ -4,15 +4,15 @@ var NavConstants = require("./constants/NavigationConstants");
 var Router = Backbone.Router.extend({
     routes : {
         "stream": "stream",
-        "friends": "friends",
+        "chat": "chat",
         "profile": "profile",
         ".*": "stream"
     },
     stream : function() {
         this.current = { page: NavConstants.PAGE_STREAM };
     },
-    friends : function() {
-        this.current = { page: NavConstants.PAGE_FRIENDS };
+    chat : function() {
+        this.current = { page: NavConstants.PAGE_CHAT };
     },
     profile : function() {
         this.current = { page: NavConstants.PAGE_PROFILE };
