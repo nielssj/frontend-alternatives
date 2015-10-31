@@ -4,6 +4,7 @@ var AppConstants = require('../constants/AppConstants');
 var assign = require('object-assign');
 var Backbone = require("backbone");
 var _ = require('underscore');
+var Utilities = require('./Utilities');
 Backbone.Validation = require('backbone-validation');
 
 
@@ -11,20 +12,6 @@ var endpointHost = "http://127.0.0.1:5984";
 
 // Enable model validation
 _.extend(Backbone.Model.prototype, Backbone.Validation.mixin);
-
-
-// Custom parse function (to support CouchDB)
-parseCouch = function(data, options) {
-    if( data.hasOwnProperty("rows") && _.isArray(data.rows) ) {
-        return _.map(data.rows, function(doc) {
-            doc.value.id = doc.id;
-            doc.value.rev = doc.value["_rev"];
-            return doc.value;
-        });
-    } else {
-        return data;
-    }
-};
 
 // Comment collection
 var Comment = Backbone.Model.extend({
@@ -39,7 +26,7 @@ var Comment = Backbone.Model.extend({
 var CommentCollection = Backbone.Collection.extend({
     model: Comment,
     url: endpointHost + "/comments",
-    parse: parseCouch
+    parse: Utilities.parseCouch
 });
 
 // Moment collection
@@ -57,7 +44,7 @@ var Moment = Backbone.Model.extend({
 var MomentCollection = Backbone.Collection.extend({
     model: Moment,
     url: endpointHost + "/moments",
-    parse: parseCouch
+    parse: Utilities.parseCouch
 });
 
 
