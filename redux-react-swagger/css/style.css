@@ -1,0 +1,172 @@
+/* Space out content a bit */
+body {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+/* Everything but the jumbotron gets side spacing for mobile first views */
+.header,
+.marketing,
+.footer {
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+/* Custom page header */
+.header {
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e5e5e5;
+}
+/* Make the masthead heading the same height as the navigation */
+.header h3 {
+    margin-top: 0;
+    margin-bottom: 0;
+    line-height: 40px;
+}
+
+/* Customize container */
+@media (min-width: 768px) {
+    .container {
+        max-width: 730px;
+    }
+}
+.container-narrow > hr {
+    margin: 30px 0;
+}
+
+/* Main marketing message and sign up button */
+.jumbotron {
+    text-align: center;
+    border-bottom: 1px solid #e5e5e5;
+}
+.jumbotron .btn {
+    padding: 14px 24px;
+    font-size: 21px;
+}
+
+/* Supporting marketing content */
+.marketing {
+    margin: 40px 0;
+}
+.marketing p + h4 {
+    margin-top: 28px;
+}
+
+/* Responsive: Portrait tablets and up */
+@media screen and (min-width: 768px) {
+    /* Remove the padding we set earlier */
+    .header,
+    .marketing,
+    .footer {
+        padding-right: 0;
+        padding-left: 0;
+    }
+    /* Space out the masthead */
+    .header {
+        margin-bottom: 30px;
+    }
+    /* Remove the bottom border on the jumbotron for visual effect */
+    .jumbotron {
+        border-bottom: 0;
+    }
+}
+
+
+
+.comment-action {
+    cursor: pointer;
+}
+
+.noselect {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.validation-error {
+    color: red;
+    font-weight: bolder;
+}
+
+.moment-buttons {
+    margin: 14px;
+    height: 30px;
+}
+
+.moment-separator {
+    margin: 0;
+}
+
+.moment-footer {
+    height: 68px;
+}
+
+.comment-list-root {
+    list-style: none;
+    padding: 0;
+    margin: 14px 14px 0 14px;
+}
+
+.comment {
+    padding: 0 0 10px 4px
+}
+
+.comment-list-sub {
+    border-left: 1px solid #eee;
+    list-style: none;
+    padding: 0 0 4px 14px
+}
+
+.new-comment-input {
+    width: 75%;
+    margin-bottom: 14px;
+}
+
+
+.new-comment-input-root {
+    width: 100%;
+    padding: 0 14px 14px 14px;
+}
+
+.comment-validation-error {
+    margin: 0 14px 14px 14px;
+    padding: 7px;
+}
+
+.loader {
+    background-image: url('../img/ajax-loader.gif');
+    width: 43px;
+    height: 11px;
+    margin: 14px auto;
+}
+
+.nav-link {
+    cursor: pointer;
+}
+
+.chat-message:nth-child(even) {
+    background-color: #f4f4f4;
+}
+
+.chat-message-thumb {
+    margin: 10px;
+}
+
+.chat-message-thumb > div {
+    width: 64px;
+    height: 64px;
+    background-color: #f4f4f4;
+    text-align: center;
+}
+
+.chat-message-me .chat-message-thumb > div {
+    background-color: #337ab7;
+    color: white;
+}
+
+.chat-message-body {
+    padding: 7px 10px 10px 10px;
+}
