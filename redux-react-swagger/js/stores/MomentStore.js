@@ -54,7 +54,7 @@ AppDispatcher.register(function(action) {
             setTimeout(function() {
                 api.getComments({id: id},
                     function(res) {
-                        var moment = _.find(moments, function(m) { return m["_id"] == id; });
+                        var moment = _.find(moments, m => m["_id"] == id);
                         moment.comments = res.obj;
                         MomentStore.emit(AppConstants.EVENT_MOMENTS_CHANGED);
                     }
@@ -80,7 +80,7 @@ AppDispatcher.register(function(action) {
         case AppConstants.ACTION_DELETE_MOMENT:
             api.deleteMoment({id:action.moment["_id"]},
                 function(res) {
-                    moments = _.reject(moments, function(m) { return m["_id"] == res["_id"]; });
+                    moments = _.reject(moments, m => m["_id"] == res["_id"]);
                     MomentStore.emit(AppConstants.EVENT_MOMENTS_CHANGED);
                 }
             );
@@ -89,7 +89,7 @@ AppDispatcher.register(function(action) {
         case AppConstants.ACTION_UPDATE_MOMENT:
             api.putMoment({ id:action.momentId, changes: action.changes},
                 function(res) {
-                    var mid = _.findIndex(moments, function(m) { return m["_id"] == res["_id"]; });
+                    var mid = _.findIndex(moments, m => m["_id"] == res["_id"]);
                     moments[mid] = res;
                     MomentStore.emit(AppConstants.EVENT_MOMENTS_CHANGED);
                 }
@@ -107,7 +107,7 @@ AppDispatcher.register(function(action) {
                     comment: comment
                 },
                 function(res) {
-                    var moment = _.find(moments, function(m) { return m["_id"] == comment.parentMoment; });
+                    var moment = _.find(moments, m => m["_id"] == comment.parentMoment);
                     if(moment.comments) {
                         moment.comments.push(res.obj)
                     } else {
@@ -130,8 +130,8 @@ AppDispatcher.register(function(action) {
                     cid: comment["_id"]
                 },
                 function(res) {
-                    var moment = _.find(moments, function(m) { return m["_id"] == comment.parentMoment; });
-                    moment.comments = _.reject(moment.comments, function(m) { return m["_id"] == res.obj["_id"]; });
+                    var moment = _.find(moments, m => m["_id"] == comment.parentMoment);
+                    moment.comments = _.reject(moment.comments, m => m["_id"] == res.obj["_id"]);
                     MomentStore.emit(AppConstants.EVENT_MOMENTS_CHANGED);
                 },
                 function(err) {
