@@ -1,15 +1,5 @@
-##formidable-react-native-app-boilerplate
-> React Native / Redux / Babel boilerplate.
-
-#### Features
-
-- Babel/ES2015 support
-- ES6 Class support
-- Redux with Async actions via `redux-thunk` and console logging via `redux-logger`
-- Navigator & NavigationBar
-- Android support
-- ESLint preconfigured with settings from [eslint-config-defaults](https://github.com/walmartlabs/eslint-config-defaults)
-- Flowtype annotations preconfigured
+##frontend-alternatives/react-native
+> React Native / Redux / Babel
 
 #### Getting Started
 
