@@ -73,12 +73,13 @@ let styles = StyleSheet.create({
 
 class MomentDetails extends Component {
   componentDidMount() {
-    this.props.dispatch(fetchComments(this.props.moment['_id']));
+    this.props.dispatch(fetchComments(this.props.momentId));
   }
 
   renderComments() {
     if(this.props.comments) {
-      return this.props.comments.map(comment =>
+      let momentComments = this.props.comments.filter(c => c['parentMoment'] == this.props.momentId);
+      return momentComments.map(comment =>
         (<CommentListItem key={comment['_id']} comment={comment} />));
     } else {
       return [];
@@ -86,9 +87,9 @@ class MomentDetails extends Component {
   }
 
   render() {
-    let moment = this.props.moment;
+    let moment = this.props.moments.find(m => m['_id'] == this.props.momentId);
     return (
-      <View>
+      <View style={this.props.sceneStyle}>
         <View style={styles.row}>
           <View style={styles.leftColumn}>
             <Image source={require('../../img/niels.jpg')} style={styles.avatar} />
@@ -130,7 +131,7 @@ class MomentDetails extends Component {
   }
 
   onDeletePress() {
-    this.props.dispatch(removeMoment(this.props.moment));
+    this.props.dispatch(removeMoment(this.props.momentId));
   }
 }
 
@@ -144,17 +145,16 @@ MomentDetails.propTypes = {
 MomentDetails.defaultProps = {
   dispatch: () => {},
   isFetchingComments: false,
-  moment: {},
+  moments: [],
   comments: []
 };
 
-const mapStateToProps = (momentId, state) => {
+const mapStateToProps = (state) => {
   return {
     isFetchingComments: state.data.isFetchingComments,
-    moment: state.data.moments.find(m => m['_id'] == momentId),
-    comments: state.data.comments.filter(c => c['parentMoment'] == momentId)
+    moments: state.data.moments,
+    comments: state.data.comments
   }
 };
 
-export default (momentId) =>
-  connect(mapStateToProps.bind(this, momentId))(MomentDetails);
+export default connect(mapStateToProps)(MomentDetails);

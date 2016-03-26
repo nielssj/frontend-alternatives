@@ -5,9 +5,8 @@ import React from "react-native";
 import { connect } from "react-redux";
 import { fetchData } from "../actions";
 import MomentListItem from "../components/MomentListItem";
-import MomentDetails from "../components/MomentDetails";
 import ActionButton from "../components/ActionButton";
-import MomentEditor from "../components/MomentEditor";
+import { Actions } from "react-native-router-flux";
 
 let {
   StyleSheet,
@@ -56,12 +55,12 @@ class App extends React.Component {
   render() {
     if (this.state) {
       return (
-        <View style={styles.root}>
+        <View style={[styles.root, this.props.sceneStyle]}>
           <ListView
             dataSource={this.state.dataSource}
             renderRow={this.renderRow.bind(this)}
           />
-          <ActionButton onPress={this.onCreatePress.bind(this)} />
+          <ActionButton onPress={this.onCreatePress} />
         </View>
       );
     } else {
@@ -74,19 +73,11 @@ class App extends React.Component {
   }
 
   onItemPress(momentId) {
-    let navigator = this.props.navigator;
-    navigator.push({
-      component: MomentDetails(momentId),
-      title: "Moment details"
-    });
+    Actions.momentDetails({ momentId: momentId });
   }
 
   onCreatePress() {
-    let navigator = this.props.navigator;
-    navigator.push({
-      component: MomentEditor(),
-      title: "New Moment"
-    });
+    Actions.momentEditor();
   }
 }
 

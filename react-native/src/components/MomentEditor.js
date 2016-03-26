@@ -69,7 +69,7 @@ let styles = StyleSheet.create({
 class MomentEditor extends Component {
   render() {
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, this.props.sceneStyle]}>
         <View style={styles.row}>
           <View style={styles.leftColumn}>
             <Image source={require('../../img/niels.jpg')} style={styles.avatar} />
